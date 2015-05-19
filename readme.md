@@ -5,5 +5,5 @@ A very simple implementation of Conway's Game of Life.
 
 Dependencies
 ------------
-Python 3
-Pyglet
+* Python 3
+* Pyglet
