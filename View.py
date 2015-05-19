@@ -77,10 +77,11 @@ class View:
 			self.gui.addInteractable(header)
 
 			for i in range(0,len(arr)):
-				toggle = GUI.Toggle (x, y-(i+2)*35, 30, 30, "", set_array_element(i,arr))
+				toggle = GUI.Toggle (x, y-(i+2)*35, 30, 30, str(i), set_array_element(i,arr))
 				toggle.set_state (arr[i])
 				self.gui.addInteractable(toggle)
 
+		# Create controls for modifying the rules of the game
 		toggle_column_with_header (self.window.width-100, window.height-80, self.sim.aliveRule, True)
 		toggle_column_with_header (self.window.width-100+50, window.height-80, self.sim.deadRule, False)
 
@@ -115,7 +116,6 @@ class View:
 		self.sim.clear()
 
 	def on_key_press(self,symbol, modifiers):
-		#self.viewOffset = (self.viewOffset[0]+0.1,self.viewOffset[1])
 		pass
 
 	def on_mouse_press(self,x, y, button, modifiers):
@@ -156,15 +156,15 @@ class View:
 			if abs(self.accumulatedDrag[0]) >= View.MIN_DRAG_DIST or abs(self.accumulatedDrag[1]) >= View.MIN_DRAG_DIST:
 				self.viewOffset = (self.viewOffsetStart[0]+self.accumulatedDrag[0], self.viewOffsetStart[1]+self.accumulatedDrag[1])
 
+	# Transforms a point from local space (cells) to screen space (pixels)
 	def local_to_screen (self, point):
 		return (point[0]*self.viewScale + self.viewOffset[0],point[1]*self.viewScale + self.viewOffset[1])
 
+	# Transforms a point from screen space (pixels) to local space (cells)
 	def screen_to_local (self, point):
 		return ((point[0]-self.viewOffset[0])/self.viewScale, (point[1]-self.viewOffset[1])/self.viewScale)
 
 	def draw(self):
-
-		#print("Draw...")
 
 		updateInterval = 1.0/(2**self.speed)
 		if time.time() - self.lastUpdate > updateInterval and self.running:
@@ -175,17 +175,17 @@ class View:
 			for i in range(0,self.skip+1):
 				self.sim.update()
 
-			print("Updating ",time.time()-start)
+			#print("Updating ",time.time()-start)
 
 		start = time.time()
 
 		self.draw_simulation()
 
-		print("Rendering ",time.time()-start)
+		#print("Rendering ",time.time()-start)
 
+		# Draw an outline around the world
 		top_right = self.local_to_screen((self.sim.size,self.sim.size))
 		bottom_left = self.local_to_screen((0,0))
-
 		GUI.draw_rect_outline (bottom_left[0],bottom_left[1],top_right[0]-bottom_left[0],top_right[1]-bottom_left[1],80)
 
 		self.gui.draw()
